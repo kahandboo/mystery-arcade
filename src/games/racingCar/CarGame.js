@@ -1,5 +1,3 @@
-import Car from "./Car.js";
-
 class CarGame {
   #cars;
 
