@@ -1,4 +1,3 @@
-import { MissionUtils } from "@woowacourse/mission-utils";
 import { CONSTANTS } from "./Constants.js";
 
 class Car {
@@ -11,7 +10,7 @@ class Car {
   }
 
   move() {
-    const randomNumber = MissionUtils.Random.pickNumberInRange(CONSTANTS.RANDOM_RANGE_MIN, CONSTANTS.RANDOM_RANGE_MAX);
+    const randomNumber = Math.floor(Math.random() * (CONSTANTS.RANDOM_RANGE_MAX - CONSTANTS.RANDOM_RANGE_MIN + 1)) + CONSTANTS.RANDOM_RANGE_MIN;
         
     if (randomNumber >= CONSTANTS.MIN_MOVE_NUMBER) {
       this.#score += 1;
