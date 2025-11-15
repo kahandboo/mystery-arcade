@@ -1,10 +1,43 @@
 import Car from "../games/racingCar/Car.js";
 import { CarGame, generateCarNames } from "../games/racingCar/CarGame.js";
 
-export function renderRaceScreen(mainContainer, gameData, onRaceComplete) {
-  let currRoundCount = 0;
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function createRankingHTML(game) {
+  return game.getCars()
+    .slice()
+    .sort((a, b) => b.getScore() - a.getScore())
+    .slice(0, 5)
+    .map((car, index) => `
+            <li>
+                <span class="info-label">${index + 1}위 ${car.getName()}</span>
+                <span class="info-value" id="info-car-score">${car.getScore()}</span>
+            </li>
+        `)
+    .join("");
+}
+
+function createTrackHTML(game, roundCount) {
+  const separator = `\n${"-".repeat(roundCount)}\n`;
+
+  return game.getCars().map(car => {
+    const carName = car.getName();
+    const score = car.getScore();
+    const track = " ".repeat(score);
+    const carIcon = ">"; 
+
+    const alignedName = carName.padEnd(8); 
+    return `${alignedName} : ${track}${carIcon}`;
+  }).join(separator);
+}
+
+export async function renderRaceScreen(mainContainer, gameData, onRaceComplete) {
+  let currRoundCount = 1;
   const roundCount = gameData.bettingAmount / 1000;
   const potentialWinnings = gameData.bettingAmount * roundCount;
+  const userCarName = gameData.carName;
 
   mainContainer.innerHTML = `
     <div class="screen" id="race-screen">        
@@ -35,40 +68,51 @@ export function renderRaceScreen(mainContainer, gameData, onRaceComplete) {
             </li>
             <li>
                 <span class="info-label">내 자동차 </span>
-                <span id="footer-player-car">${gameData.carName}</span>
+                <span id="footer-player-car">${userCarName}</span>
             </li>
         </ul>
     </div>
     `;
 
-    const trackDisplay = document.getElementById('race-track-display');
-    const diceArea = document.getElementById('dice-animation-area');
-    const roundInfo = document.getElementById('round-info');
-    const rankingList = document.getElementById('ranking-list');
+  const trackDisplay = document.getElementById("race-track-display");
+  const diceArea = document.getElementById("dice-animation-area");
+  const roundInfo = document.getElementById("round-info");
+  const rankingList = document.getElementById("ranking-list");
 
-    const carNames = generateCarNames(gameData.carName, roundCount);
+  const carNames = generateCarNames(gameData.carName, roundCount);
 
-    const cars = carNames.map(name => new Car(name));
-    const game = new CarGame(cars);
+  const cars = carNames.map(name => new Car(name));
+  const game = new CarGame(cars);
 
-    while (currRoundCount < roundCount) {
-        game.progressRound();
+  rankingList.innerHTML = createRankingHTML(game);
+  trackDisplay.textContent = createTrackHTML(game, roundCount*2);
+  await delay(1500);
 
-        rankingList.innerHTML = game.getCars()
-            .slice()
-            .sort((a, b) => b.getScore() - a.getScore())
-            .slice(0, 5)
-            .map((car, index) => `
-                <li>
-                    <span class="info-label">${index + 1}위 ${car.getName()}</span>
-                    <span class="info-value" id="info-car-score">${car.getScore()}</span>
-                </li>
-            `)
-            .join('');
+  for (let i = 0; i < roundCount; i++) {
+    const currentRound = i + 1;
+        
+    diceArea.textContent = `Round ${currentRound}: 🎲 굴리는 중...`;
+    await delay(500);
 
-        currRoundCount += 1
-    }
+    game.progressRound();
 
-    const winners = game.getWinners();
-    onRaceComplete(winners);
+    diceArea.textContent = `Round ${currentRound} 결과`;
+    trackDisplay.textContent = createTrackHTML(game, roundCount*2);
+    rankingList.innerHTML = createRankingHTML(game);
+    roundInfo.textContent = `Round ${currentRound} / ${roundCount}`;
+
+    await delay(1000);
+  }
+
+  const winners = game.getWinners();
+  const playerWon = winners.map(car => car.getName()).includes(gameData.carName);
+    
+  const resultData = {
+    isWin: playerWon,
+    winners: winners.map(car => car.getName()),
+    winnings: potentialWinnings,
+    originalGameData: gameData
+  };
+
+  onRaceComplete(resultData);
 }
