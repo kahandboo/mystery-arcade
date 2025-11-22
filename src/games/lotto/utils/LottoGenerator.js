@@ -1,5 +1,5 @@
 import Lotto from "../domain/Lotto.js";
-import { MissionUtils } from "@woowacourse/mission-utils";
+import { pickUniqueNumbersInRange } from "./Constants.js";
 
 class LottoGenerator {
   static generateSingle() {
@@ -12,7 +12,7 @@ class LottoGenerator {
   }
 
   static #getLottoNumbers() {
-    const numbers = MissionUtils.Random.pickUniqueNumbersInRange(1, 45, 6);
+    const numbers = pickUniqueNumbersInRange(1, 45, 6);
     return numbers;
   }
 }
