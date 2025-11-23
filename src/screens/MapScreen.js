@@ -221,6 +221,30 @@ export class MapScreen {
       this.onEnterGame("lotto");
       return;
     }
+
+    if (option.action === "ENDING_NORMAL") {
+      alert("꿀꺽...\n머리가 멍해진다...\n\n[SYSTEM]: Memory Reset Complete.");
+      localStorage.clear(); // 데이터 초기화
+      location.reload(); // 새로고침 (루프)
+    }
+    
+    if (option.action === "ENDING_TRUE") {
+      // 1. 관리자 대사 출력 (alert 혹은 모달)
+      alert("관리자: 으아악!! 멈춰!! 시스템이 붕괴된다고!!!");
+      
+      // 2. 글리치 효과 적용
+      document.body.classList.add("glitch-effect");
+      
+      // 3. 3초 뒤 검은 화면 + 텍스트 출력
+      setTimeout(() => {
+          document.body.innerHTML = `
+              <div class="screen-out">
+                  <p>CRITICAL ERROR.<br><br>CONNECTION LOST.<br><br>...YOU ARE FREE.</p>
+              </div>
+          `;
+          // 여기서 사운드 재생 (치이익- 하는 노이즈 소리)
+      }, 3000);
+    }
     
     if (option.next) {
       this.startDialogue(option.next);

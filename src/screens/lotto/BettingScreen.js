@@ -1,6 +1,7 @@
 import PurchaseAmount from '../../games/lotto/domain/PurchaseAmount.js';
 import Lotto from '../../games/lotto/domain/Lotto.js';
 import Bonus from '../../games/lotto/domain/Bonus.js';
+import LottoGenerator from '../../games/lotto/utils/LottoGenerator.js';
 import { player } from "../../models/Player.js";
 
 export function renderBettingScreen(container, onStartCallback) {
@@ -11,18 +12,23 @@ export function renderBettingScreen(container, onStartCallback) {
     container.innerHTML = `
       <div class="screen" id="betting-screen">
         <div class="title-container">
-          <h2>로또</h2>
+          <h2>Lotto</h2>
         </div>
 
         <div class="purchase-ui">
-          <label>구입 금액</label>
+          <label>purchase amount</label>
           <input type="text" id="purchase-amount"/>
           <span id="ticket-count-preview" class="preview-text">0장</span>
-          <label>당첨 번호 (6개)</label>
+          
+          <div class="lotto-iuput-header">
+            <label>winning numbers</label>
+            <button id="auto-btn" class="auto-btn">자동</button>
+          </div>
+
           <div class="lotto-inputs-container">
             ${inputFields}
           </div>
-          <label>보너스 번호</label>
+          <label>bonus number</label>
           <input type="text" id="bonus"/>
           <p id="error-message" class="error-message"></p>
           <button id="start-btn">START !</button>
@@ -38,7 +44,8 @@ export function renderBettingScreen(container, onStartCallback) {
     const startButton = document.getElementById("start-btn");
     const exitButton = document.getElementById("exit-btn");
     const error = document.getElementById("error-message");
-    const ticketPreview = document.getElementById('ticket-count-preview');  
+    const ticketPreview = document.getElementById('ticket-count-preview');
+    const autoButton = document.getElementById('auto-btn');  
 
     startButton.disabled = true;
   
@@ -61,6 +68,23 @@ export function renderBettingScreen(container, onStartCallback) {
         startButton.disabled = true;
       }
     };
+
+    autoButton.addEventListener('click', () => {
+      try {
+        const autoLotto = LottoGenerator.generateSingle();
+        const autoNumbers = autoLotto.numbers; 
+
+        winningInputs.forEach((input, index) => {
+          input.value = autoNumbers[index];
+        });
+
+        error.textContent = "";
+        checkFormValidity();
+
+      } catch (e) {
+        console.error("Auto generation failed", e);
+      }
+    });
   
     purchaseInput.addEventListener('input', () => {
       const value = Number(purchaseInput.value);
@@ -70,7 +94,6 @@ export function renderBettingScreen(container, onStartCallback) {
         error.textContent = "";
         
         ticketPreview.textContent = `${purchase.count}장`; 
-        ticketPreview.style.color = 'blue';
   
       } catch (e) {
         error.textContent = e.message;

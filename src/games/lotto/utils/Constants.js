@@ -1,9 +1,9 @@
 const RANK = Object.freeze({
   NONE: { key: "NONE", match: 2, prize: 0 },
-  FIFTH: { key: "FIFTH", match: 3, prize: 5000 },
-  FOURTH: { key: "FOURTH", match: 4, prize: 50000 },
-  THIRD: { key: "THIRD", match: 5, prize: 1500000 },
-  SECOND: { key: "SECOND", match: 5, prize: 30000000 },
+  FIFTH: { key: "FIFTH", match: 3, prize: 30000 },
+  FOURTH: { key: "FOURTH", match: 4, prize: 150000 },
+  THIRD: { key: "THIRD", match: 5, prize: 3000000 },
+  SECOND: { key: "SECOND", match: 5, prize: 50000000 },
   FIRST: { key: "FIRST", match: 6, prize: 2000000000 },
 });
 

@@ -70,9 +70,23 @@ export function renderResultScreen(mainContainer, resultData, onPlayAgain, onNew
 
     player.addCoins(resultData.winnings);
   }
+
+  const playAgainBtn = document.getElementById("play-again-btn");
+  const cost = resultData.originalGameData.bettingAmount;
+
+  if (player.getCoins() < cost) {
+    playAgainBtn.disabled = true;
+    playAgainBtn.textContent = "Out of money";
+    playAgainBtn.style.background = "#555"; 
+    playAgainBtn.style.boxShadow = "none";
+    playAgainBtn.style.animation = "none";
+    playAgainBtn.style.cursor = "default";
+  }
   
   document.getElementById("play-again-btn").addEventListener("click", () => {
-    onPlayAgain(resultData.originalGameData);
+    if (player.deductCoins(cost)) {
+      onPlayAgain(resultData.originalGameData);
+    }
   });
 
   document.getElementById("new-betting-btn").addEventListener("click", () => {

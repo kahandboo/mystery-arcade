@@ -44,7 +44,7 @@ export function renderLottoScreen(container, gameData, onRaceComplete) {
   const startMachine = () => {
     const totalCount = purchaseAmount.count;
     
-    const intervalTime = totalCount > 50 ? 20 : 50; 
+    const intervalTime = totalCount > 50 ? 200 : 500; 
     
     const $progressText = container.querySelector('#progress-text');
     const $progressBar = container.querySelector('#progress-bar');
@@ -71,7 +71,7 @@ export function renderLottoScreen(container, gameData, onRaceComplete) {
             purchasedLottos: generatedLottos 
           };
           onRaceComplete(resultData); 
-        }, 1500); 
+        }, 2000); 
       }
     }, intervalTime);
   };
