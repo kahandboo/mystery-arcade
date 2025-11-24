@@ -30,11 +30,11 @@ body {
 .ascii-art-title {
   position: absolute;
   left: 50%;
-  bottom: -11rem;
+  bottom: -13rem;
   transform: translateX(-50%);
   font-family: monospace;
   font-size: clamp(0.2rem, 1.1vw, 0.8rem);
-  color: #0000AA;
+  color: #9334ff;
   z-index: 1;
   white-space: pre;
   line-height: 1.1;

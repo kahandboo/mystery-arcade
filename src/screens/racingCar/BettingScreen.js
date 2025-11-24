@@ -2,7 +2,7 @@ import Validator from "../../games/racingCar/Validator.js";
 import { convertImageFileToAscii } from "../../utils/converter.js";
 import { player } from "../../models/Player.js";
 
-const CAR_FRAMES_PATH = "../title_car.jpg";
+const CAR_FRAMES_PATH = "../../assets/title_car.jpg";
 
 async function loadStaticAsciiTitle() {
   const titleEl = document.getElementById("title-animation");

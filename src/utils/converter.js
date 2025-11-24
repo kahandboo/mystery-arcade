@@ -1,6 +1,6 @@
 const DEFAULT_ASCII_RAMP = "@#*=-. ";
 
-const ASCII_WIDTH = 80;
+const ASCII_WIDTH = 110;
 const ASCII_HEIGHT = 40;
 
 const canvas = document.createElement("canvas");
